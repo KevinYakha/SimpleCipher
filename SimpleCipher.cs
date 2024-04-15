@@ -45,7 +45,7 @@ public class SimpleCipher
                 shiftAmount++;
             }
             charIndex = (charIndex + shiftAmount) % _chars.Length;
-            cipher[i] = _chars[shiftAmount];
+                cipher[i] = _chars[charIndex];
         }
         return new string(cipher);
     }
