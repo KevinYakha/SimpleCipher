@@ -30,7 +30,24 @@ public class SimpleCipher
 
     public string Encode(string plaintext)
     {
-        throw new NotImplementedException("You need to implement this function.");
+        char[] cipher = plaintext.ToCharArray();
+        for (int i = 0; i < plaintext.Length; i++)
+        {
+            int charIndex = 0; // index of original char
+            while (plaintext[i] != _chars[charIndex])
+            {
+                charIndex++;
+            }
+
+            int shiftAmount = 0;
+            while (_key[i % _key.Length] != _chars[shiftAmount])
+            {
+                shiftAmount++;
+            }
+            charIndex = (charIndex + shiftAmount) % _chars.Length;
+            cipher[i] = _chars[shiftAmount];
+        }
+        return new string(cipher);
     }
 
     public string Decode(string ciphertext)
