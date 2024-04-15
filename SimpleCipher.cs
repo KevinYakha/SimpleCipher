@@ -2,61 +2,80 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 
-public class SimpleCipher
-{
-    public SimpleCipher()
+    public class SimpleCipher
     {
-        Random rng = new Random();
-        char[] temp = new char[100];
-        for (var i = 0; i < 100; i++)
+        public SimpleCipher()
         {
-            temp[i] = _chars[rng.Next(_chars.Length)];
-        }
-        _key = new string(temp);
-    }
-
-    public SimpleCipher(string key)
-    {
-        _key = key;
-    }
-    
-    public string Key 
-    {
-        get
-        {
-            return _key;       
-        }
-    }
-
-    public string Encode(string plaintext)
-    {
-        char[] cipher = plaintext.ToCharArray();
-        for (int i = 0; i < plaintext.Length; i++)
-        {
-            int charIndex = 0; // index of original char
-            while (plaintext[i] != _chars[charIndex])
+            Random rng = new Random();
+            char[] temp = new char[100];
+            for (var i = 0; i < 100; i++)
             {
-                charIndex++;
+                temp[i] = _chars[rng.Next(_chars.Length)];
             }
+            _key = new string(temp);
+        }
 
-            int shiftAmount = 0;
-            while (_key[i % _key.Length] != _chars[shiftAmount])
+        public SimpleCipher(string key)
+        {
+            _key = key;
+        }
+
+        public string Key
+        {
+            get
             {
-                shiftAmount++;
+                return _key;
             }
-            charIndex = (charIndex + shiftAmount) % _chars.Length;
+        }
+
+        public string Encode(string plaintext)
+        {
+            char[] cipher = plaintext.ToCharArray();
+            for (int i = 0; i < plaintext.Length; i++)
+            {
+                int charIndex = 0; // index of original char
+                while (plaintext[i] != _chars[charIndex])
+                {
+                    charIndex++;
+                }
+
+                int shiftAmount = 0;
+                while (_key[i % _key.Length] != _chars[shiftAmount])
+                {
+                    shiftAmount++;
+                }
+                charIndex = (charIndex + shiftAmount) % _chars.Length;
                 cipher[i] = _chars[charIndex];
+            }
+            return new string(cipher);
         }
-        return new string(cipher);
-    }
 
-    public string Decode(string ciphertext)
-    {
-        throw new NotImplementedException("You need to implement this function.");
-    }
+        public string Decode(string ciphertext)
+        {
+            char[] plaintext = ciphertext.ToCharArray();
+            for (int i = 0; i < ciphertext.Length; i++)
+            {
+                int charIndex = 0; // index of original char
+                while (ciphertext[i] != _chars[charIndex])
+                {
+                    charIndex++;
+                }
 
-    private string _key;
-    private char[] _chars = { 'a', 'b', 'c', 'd', 'e',
+                int shiftAmount = 0;
+                while (_key[i % _key.Length] != _chars[shiftAmount])
+                {
+                    shiftAmount++;
+                }
+                charIndex = (charIndex - shiftAmount) % _chars.Length;
+                if (charIndex < 0)
+                    charIndex = _chars.Length + charIndex;
+                plaintext[i] = _chars[charIndex];
+            }
+            return new string(plaintext);
+        }
+
+        private string _key;
+        private char[] _chars = { 'a', 'b', 'c', 'd', 'e',
         'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
         'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-}
+    }
